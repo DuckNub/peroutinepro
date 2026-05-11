@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Motivation made by duc</title>
+    <title>Motivation by Duc</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕵️‍♂️</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,52 +12,54 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap');
-        
-        * { font-family: 'Urbanist', sans-serif; -webkit-tap-highlight-color: transparent; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        * { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: radial-gradient(circle at top right, #064e3b, #020617);
+            background: #020617;
+            background-image: radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                              radial-gradient(at 0% 100%, rgba(244, 63, 94, 0.08) 0px, transparent 50%);
             background-attachment: fixed;
         }
 
-        .glass { 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px) saturate(160%); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
         .tab-active { 
-            color: #10b981; 
-            border-bottom: 4px solid #10b981;
-            text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            background: rgba(99, 102, 241, 0.8);
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.6; }
+        /* Calendar Styles */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .calendar-day { 
+            aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02);
+        }
+        .calendar-day:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+        .calendar-day.active { border: 1px solid #6366f1; background: rgba(99, 102, 241, 0.2); }
+        .streak-icon { font-size: 10px; margin-top: 2px; }
 
-        .btn-neon:active { transform: scale(0.9); }
-        
-        /* Hiệu ứng trượt cho danh sách */
-        .task-item { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
     </style>
 </head>
-<body class="text-slate-200 min-h-screen pb-20">
+<body class="text-slate-200 min-h-screen pb-24">
 
     <div id="authSection" class="flex flex-col items-center justify-center min-h-screen p-6">
-        <div class="glass p-10 rounded-[2.5rem] w-full max-w-sm text-center shadow-2xl border-white/10">
-            <div class="text-7xl mb-6 drop-shadow-2xl">💎</div>
-            <h1 class="text-4xl font-black mb-1 bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">PEROUTINEPRO</h1>
-            <p class="text-slate-500 mb-10 text-[10px] uppercase tracking-[0.4em] font-bold">áp lực tạo kim cương</p>
-            
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-slate-900/50 rounded-2xl border border-white/5 outline-none focus:border-emerald-500/50 transition-all">
-            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-slate-900/50 rounded-2xl border border-white/5 outline-none focus:border-emerald-500/50 transition-all">
-            
-            <div class="flex gap-3">
-                <button onclick="handleAction('signup')" class="flex-1 bg-slate-800 p-4 rounded-2xl font-bold hover:bg-slate-700 transition">Đăng ký</button>
-                <button onclick="handleAction('login')" class="flex-1 bg-emerald-600 p-4 rounded-2xl font-bold hover:bg-emerald-500 shadow-lg shadow-emerald-900/30 transition">Đăng nhập</button>
-            </div>
+        <div class="glass-panel p-10 rounded-[3rem] w-full max-w-sm text-center">
+            <div class="text-6xl mb-6">💎</div>
+            <h1 class="text-3xl font-black mb-1 text-white italic">PEROUTINEPRO</h1>
+            <p class="text-slate-400 mb-10 text-[10px] uppercase tracking-[0.3em] font-semibold">Áp lực tạo kim cương</p>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-white/5 rounded-2xl border border-white/10 outline-none">
+            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-white/5 rounded-2xl border border-white/10 outline-none">
+            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold shadow-lg transition active:scale-95">Bắt đầu kỷ luật</button>
         </div>
     </div>
 
@@ -66,52 +68,63 @@
         <header class="flex justify-between items-center mb-10 pt-6">
             <div class="flex items-center gap-4">
                 <div class="relative">
-                    <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-16 h-16 rounded-2xl object-cover border-2 border-emerald-500/30 shadow-lg shadow-emerald-500/20">
-                    <button onclick="updateProfile()" class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-1.5 rounded-lg text-[10px] shadow-lg">✏️</button>
+                    <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-14 h-14 rounded-2xl object-cover border-2 border-white/10 shadow-xl">
+                    <button onclick="updateProfile()" class="absolute -bottom-1 -right-1 bg-indigo-500 text-white p-1 rounded-lg text-[10px]">✏️</button>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-white" id="userNameDisplay">Chiến binh</h2>
-                    <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-0.5">🔥 Chuỗi: <span id="streakCount">0</span> Ngày</p>
+                    <h2 class="text-xl font-extrabold text-white" id="userNameDisplay">Chào Ngọc</h2>
+                    <span id="streakCount" class="bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded text-[10px] font-black uppercase">🔥 0 Ngày</span>
                 </div>
             </div>
-            <button onclick="auth.signOut()" class="glass w-12 h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white transition">🚪</button>
+            <button onclick="auth.signOut()" class="glass-panel w-10 h-10 rounded-xl flex items-center justify-center opacity-50 hover:opacity-100 transition">🚪</button>
         </header>
 
-        <div class="glass p-7 rounded-[2.5rem] mb-8 shadow-2xl relative overflow-hidden group">
-            <div class="flex justify-between items-end mb-5 relative z-10">
-                <div>
-                    <p class="text-[10px] font-black text-slate-500 uppercase mb-1">Mục tiêu hôm nay</p>
-                    <input type="date" id="datePicker" class="bg-transparent text-2xl font-black text-emerald-400 outline-none uppercase" onchange="loadData()">
-                </div>
-                <span id="percentText" class="text-4xl font-black italic text-white">0%</span>
+        <div class="glass-panel p-6 rounded-[2rem] mb-8">
+            <div class="flex justify-between items-center mb-5">
+                <input type="date" id="datePicker" class="bg-transparent text-xl font-bold text-indigo-400 outline-none" onchange="dateChanged()">
+                <span id="percentText" class="text-3xl font-black text-white">0%</span>
             </div>
-            <div class="w-full bg-slate-900/80 h-4 rounded-full overflow-hidden border border-white/5 relative z-10">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-1000 shadow-[0_0_20px_rgba(16,185,129,0.4)]" style="width: 0%"></div>
+            <div class="w-full bg-black/20 h-2.5 rounded-full overflow-hidden border border-white/5">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-rose-500 transition-all duration-1000" style="width: 0%"></div>
             </div>
         </div>
 
-        <nav class="flex mb-8 gap-2 bg-slate-900/40 p-1.5 rounded-2xl border border-white/5">
-            <button onclick="switchTab('daily')" id="tabDaily" class="flex-1 py-3 font-black text-[11px] uppercase tracking-tighter transition rounded-xl tab-active">Thói quen</button>
-            <button onclick="switchTab('once')" id="tabOnce" class="flex-1 py-3 font-black text-[11px] uppercase tracking-tighter text-slate-500 transition rounded-xl">Nhiệm vụ</button>
-            <button onclick="switchTab('achievements')" id="tabAchieve" class="flex-1 py-3 font-black text-[11px] uppercase tracking-tighter text-slate-500 transition rounded-xl">Thành tựu</button>
+        <nav class="flex mb-8 p-1.5 glass-panel rounded-2xl">
+            <button onclick="switchTab('daily')" id="tabDaily" class="flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active">Công việc</button>
+            <button onclick="switchTab('achievements')" id="tabAchieve" class="flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition">Lịch & Nhật ký</button>
         </nav>
 
         <div id="contentBox">
             <div id="taskView">
-                <div class="flex gap-3 mb-10 glass p-2 rounded-2xl border-white/10 group focus-within:border-emerald-500/50 transition-all">
-                    <input type="text" id="taskInput" placeholder="Kỷ luật hôm nay là gì?" class="flex-1 p-4 bg-transparent outline-none text-sm font-semibold">
-                    <button onclick="addTask()" class="bg-emerald-600 w-14 h-14 rounded-xl font-black text-2xl hover:scale-95 transition shadow-lg shadow-emerald-600/20">+</button>
+                <div class="flex gap-2 mb-8 glass-panel p-1.5 rounded-2xl">
+                    <input type="text" id="taskInput" placeholder="Mục tiêu tiếp theo..." class="flex-1 p-3 bg-transparent outline-none text-sm ml-2">
+                    <button onclick="addTask()" class="bg-indigo-600 w-11 h-11 rounded-xl font-bold text-2xl active:scale-90 transition">+</button>
                 </div>
-
-                <div id="taskList" class="space-y-6"></div>
+                <div id="taskList" class="space-y-4"></div>
             </div>
 
-            <div id="achievementView" class="hidden space-y-4"></div>
+            <div id="achievementView" class="hidden space-y-8">
+                <div class="glass-panel p-6 rounded-3xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Daily complete</h3>
+                        <span class="text-[10px] text-indigo-400 font-bold" id="monthLabel">Tháng 5, 2026</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 text-center text-[9px] font-black text-slate-600 uppercase mb-3">
+                        <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
+                    </div>
+                    <div id="calendarGrid" class="calendar-grid"></div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Nhật ký ngày <span id="diaryDateLabel">...</span></h3>
+                    <textarea id="diaryInput" placeholder="Hôm nay Ngọc cảm thấy thế nào? Những gì đã làm tốt..." class="w-full h-32 bg-white/5 rounded-2xl p-4 text-sm outline-none border border-white/5 focus:border-indigo-500/30 transition-all"></textarea>
+                    <button onclick="saveDiary()" class="mt-4 w-full bg-slate-800 p-3 rounded-xl text-xs font-bold hover:bg-slate-700 transition">Lưu nhật ký</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- CẤU HÌNH FIREBASE (GIỮ NGUYÊN CỦA NGỌC) ---
         const firebaseConfig = {
             apiKey: "AIzaSyDR2TYq-l5Fxzcx5dQ0a6OUEOHIQItZ2gE",
             authDomain: "perfect-routine-pro.firebaseapp.com",
@@ -129,23 +142,20 @@
         let currentTab = 'daily';
         document.getElementById('datePicker').valueAsDate = new Date();
 
-        // 1. Quản lý Đăng nhập & Profile
         async function handleAction(type) {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
-            try {
-                if(type === 'login') await auth.signInWithEmailAndPassword(e, p);
-                else await auth.createUserWithEmailAndPassword(e, p);
-            } catch (err) { alert("Lỗi: " + err.message); }
+            try { await auth.signInWithEmailAndPassword(e, p); } catch (err) { alert(err.message); }
         }
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('mainSection').classList.remove('hidden');
-                document.getElementById('userNameDisplay').innerText = user.displayName || user.email.split('@')[0];
+                document.getElementById('userNameDisplay').innerText = "Chào " + (user.displayName || "Ngọc");
                 if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
                 loadData();
+                generateCalendar();
             } else {
                 document.getElementById('authSection').classList.remove('hidden');
                 document.getElementById('mainSection').classList.add('hidden');
@@ -153,180 +163,149 @@
         });
 
         async function updateProfile() {
-            const newName = prompt("Tên hiển thị mới:", auth.currentUser.displayName || "");
-            const newAvatar = prompt("Link ảnh Avatar mới (URL):", auth.currentUser.photoURL || "");
-            
-            let updates = {};
-            if(newName) updates.displayName = newName;
-            if(newAvatar) updates.photoURL = newAvatar;
-            
-            if(Object.keys(updates).length > 0) {
-                await auth.currentUser.updateProfile(updates);
+            const n = prompt("Tên của bạn:", auth.currentUser.displayName || "Ngọc");
+            const a = prompt("Link ảnh đại diện:", auth.currentUser.photoURL || "");
+            if(n || a) {
+                await auth.currentUser.updateProfile({ displayName: n, photoURL: a });
                 location.reload();
             }
         }
 
-        // 2. Chuyển Tab
         function switchTab(tab) {
             currentTab = tab;
-            const tabs = { daily: 'tabDaily', once: 'tabOnce', achievements: 'tabAchieve' };
-            Object.keys(tabs).forEach(k => {
-                document.getElementById(tabs[k]).className = k === tab 
-                    ? 'flex-1 py-3 font-black text-[11px] uppercase tracking-tighter transition rounded-xl tab-active' 
-                    : 'flex-1 py-3 font-black text-[11px] uppercase tracking-tighter text-slate-500 transition rounded-xl';
-            });
+            document.getElementById('tabDaily').className = tab === 'daily' ? "flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active" : "flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition";
+            document.getElementById('tabAchieve').className = tab === 'achievements' ? "flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active" : "flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition";
             
+            document.getElementById('taskView').style.display = tab === 'daily' ? 'block' : 'none';
+            document.getElementById('achievementView').style.display = tab === 'achievements' ? 'block' : 'none';
             if(tab === 'achievements') {
-                document.getElementById('taskView').classList.add('hidden');
-                document.getElementById('achievementView').classList.remove('hidden');
-                loadAchievements();
-            } else {
-                document.getElementById('taskView').classList.remove('hidden');
-                document.getElementById('achievementView').classList.add('hidden');
-                loadData();
+                generateCalendar();
+                loadDiary();
             }
         }
 
-        // 3. Logic Nhiệm vụ
+        function dateChanged() {
+            loadData();
+            if(currentTab === 'achievements') loadDiary();
+        }
+
         async function addTask() {
             const text = document.getElementById('taskInput').value;
             const date = document.getElementById('datePicker').value;
             if(!text) return;
             await db.collection("tasks").add({
-                uid: auth.currentUser.uid,
-                text, type: currentTab, date, done: false, doneDates: [], timestamp: Date.now()
+                uid: auth.currentUser.uid, text, type: 'daily', date, doneDates: [], timestamp: Date.now()
             });
             document.getElementById('taskInput').value = "";
             loadData();
+            generateCalendar();
         }
 
         async function loadData() {
             const date = document.getElementById('datePicker').value;
             const list = document.getElementById('taskList');
             list.innerHTML = "";
+            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).get();
             
-            let query = db.collection("tasks").where("uid", "==", auth.currentUser.uid).where("type", "==", currentTab);
-            if(currentTab === 'once') query = query.where("date", "==", date);
-            
-            const snap = await query.get();
-            let pendingHTML = "";
-            let doneHTML = "";
-            let doneCount = 0; let total = 0;
-
+            let doneCount = 0, total = 0;
             snap.forEach(doc => {
                 total++;
                 const data = doc.data();
-                const isDone = (currentTab === 'daily') ? (data.doneDates && data.doneDates.includes(date)) : data.done;
+                const isDone = data.doneDates && data.doneDates.includes(date);
                 if(isDone) doneCount++;
 
-                const itemHTML = `
-                    <div class="task-item glass p-5 rounded-3xl flex justify-between items-center group ${isDone ? 'opacity-40 grayscale-[0.5]' : 'shadow-xl'}">
-                        <div class="flex-1 pr-4">
-                            <span class="block text-sm font-bold ${isDone ? 'line-through text-slate-500' : 'text-white'}">${data.text}</span>
-                            <span class="text-[8px] font-black text-emerald-500 uppercase tracking-widest">${currentTab}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="toggleTask('${doc.id}', ${isDone})" class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center border border-white/5 active:scale-75 transition">${isDone ? '✅' : '✔️'}</button>
-                            <button onclick="deleteTask('${doc.id}')" class="p-2 opacity-20 group-hover:opacity-100 transition">🗑️</button>
-                        </div>
+                const item = document.createElement('div');
+                item.className = `glass-panel p-4 rounded-2xl flex justify-between items-center ${isDone ? 'opacity-40' : ''}`;
+                item.innerHTML = `
+                    <span class="text-sm font-semibold ${isDone ? 'line-through text-slate-500' : 'text-white'}">${data.text}</span>
+                    <div class="flex gap-2">
+                        <button onclick="toggleTask('${doc.id}', ${isDone})" class="w-9 h-9 rounded-full ${isDone ? 'bg-indigo-500' : 'bg-white/5'} flex items-center justify-center border border-white/10 transition-all">${isDone ? '✓' : ''}</button>
+                        <button onclick="deleteTask('${doc.id}')" class="p-2 opacity-10 hover:opacity-100">🗑️</button>
                     </div>
                 `;
-
-                if(currentTab === 'once') {
-                    if(isDone) doneHTML += itemHTML;
-                    else pendingHTML += itemHTML;
-                } else {
-                    pendingHTML += itemHTML; // Daily hiện chung
-                }
+                list.appendChild(item);
             });
-
-            if(currentTab === 'once') {
-                list.innerHTML = `
-                    <div class="space-y-4">
-                        <p class="text-[10px] font-black text-emerald-500/70 uppercase px-2 tracking-widest">Đang chờ xử lý</p>
-                        ${pendingHTML || '<p class="text-center py-4 text-xs text-slate-600 italic">Không có việc nào</p>'}
-                    </div>
-                    <div class="space-y-4 pt-4">
-                        <p class="text-[10px] font-black text-slate-600 uppercase px-2 tracking-widest">Đã hoàn thành</p>
-                        ${doneHTML}
-                    </div>
-                `;
-            } else {
-                list.innerHTML = pendingHTML || '<p class="text-center py-20 text-slate-600 font-bold">Hãy thêm thói quen đầu tiên!</p>';
-            }
-
             updateProgress(doneCount, total);
         }
 
         async function toggleTask(id, isDone) {
             const date = document.getElementById('datePicker').value;
             const ref = db.collection("tasks").doc(id);
-            if(currentTab === 'daily') {
-                if(!isDone) await ref.update({ doneDates: firebase.firestore.FieldValue.arrayUnion(date) });
-                else await ref.update({ doneDates: firebase.firestore.FieldValue.arrayRemove(date) });
-            } else await ref.update({ done: !isDone });
+            if(!isDone) await ref.update({ doneDates: firebase.firestore.FieldValue.arrayUnion(date) });
+            else await ref.update({ doneDates: firebase.firestore.FieldValue.arrayRemove(date) });
             loadData();
+            generateCalendar();
         }
 
         async function deleteTask(id) {
-            if(confirm("Xóa mục tiêu này?")) { await db.collection("tasks").doc(id).delete(); loadData(); }
+            if(confirm("Xóa nhé?")) { await db.collection("tasks").doc(id).delete(); loadData(); generateCalendar(); }
         }
 
         function updateProgress(done, total) {
             const p = total === 0 ? 0 : Math.round((done/total)*100);
-            const bar = document.getElementById('progressBar');
-            bar.style.width = p + "%";
+            document.getElementById('progressBar').style.width = p + "%";
             document.getElementById('percentText').innerText = p + "%";
+            document.getElementById('streakCount').innerText = (p >= 80 ? "🔥 " : "🌑 ") + (p >= 80 ? "1+" : "0") + " Ngày";
+        }
+
+        // --- CALENDAR LOGIC ---
+        async function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = "";
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
             
-            if(p >= 80) {
-                bar.className = "h-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.5)]";
-                document.getElementById('streakCount').innerText = "1+";
-            } else {
-                bar.className = "h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all";
-                document.getElementById('streakCount').innerText = "0";
+            document.getElementById('monthLabel').innerText = `Tháng ${month + 1}, ${year}`;
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Fetch data once for the month
+            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).get();
+            const tasks = []; snap.forEach(d => tasks.push(d.data()));
+
+            for (let i = 0; i < firstDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement('div');
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isSelected = document.getElementById('datePicker').value === dateStr;
+                
+                dayDiv.className = `calendar-day ${isSelected ? 'active' : ''}`;
+                dayDiv.innerHTML = `<span>${day}</span>`;
+                
+                // Check success icon
+                let done = 0;
+                tasks.forEach(t => { if(t.doneDates && t.doneDates.includes(dateStr)) done++; });
+                if(tasks.length > 0 && (done/tasks.length) >= 0.8) {
+                    dayDiv.innerHTML += `<span class="streak-icon">🔥</span>`;
+                }
+
+                dayDiv.onclick = () => {
+                    document.getElementById('datePicker').value = dateStr;
+                    dateChanged();
+                };
+                grid.appendChild(dayDiv);
             }
         }
 
-        // 4. Achievement Logic
-        async function loadAchievements() {
-            const container = document.getElementById('achievementView');
-            container.innerHTML = `<p class="text-center py-20 text-slate-600">Đang phân tích...</p>`;
-            
-            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).where("type", "==", "daily").get();
-            const habits = [];
-            snap.forEach(d => habits.push(d.data()));
+        // --- DIARY LOGIC ---
+        async function loadDiary() {
+            const date = document.getElementById('datePicker').value;
+            document.getElementById('diaryDateLabel').innerText = date;
+            const doc = await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).get();
+            document.getElementById('diaryInput').value = doc.exists ? doc.data().content : "";
+        }
 
-            let html = "";
-            const today = new Date();
-            
-            for(let i=0; i<7; i++) {
-                let d = new Date(); d.setDate(today.getDate() - i);
-                const dateStr = d.toISOString().split('T')[0];
-                let done = 0;
-                habits.forEach(h => { if(h.doneDates && h.doneDates.includes(dateStr)) done++; });
-                
-                const p = habits.length === 0 ? 0 : Math.round((done/habits.length)*100);
-                const success = p >= 80;
-
-                html += `
-                    <div class="glass p-5 rounded-[2rem] flex items-center gap-5 border-l-8 ${success ? 'border-emerald-500' : 'border-slate-800'}">
-                        <div class="text-center min-w-[50px]">
-                            <div class="text-[9px] font-black text-slate-500 uppercase">${d.toLocaleDateString('vi-VN',{weekday:'short'})}</div>
-                            <div class="text-xl font-black">${d.getDate()}</div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] font-black ${success ? 'text-emerald-400' : 'text-slate-500'} uppercase">${success ? 'Thành công 🏆' : 'Chưa đạt'}</span>
-                                <span class="text-lg font-black">${p}%</span>
-                            </div>
-                            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
-                                <div class="h-full ${success ? 'bg-emerald-500' : 'bg-slate-700'}" style="width: ${p}%"></div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            container.innerHTML = `<h3 class="text-center text-xs font-black text-slate-500 uppercase tracking-[0.3em] mb-6">Lịch sử 7 ngày qua</h3>` + html;
+        async function saveDiary() {
+            const date = document.getElementById('datePicker').value;
+            const content = document.getElementById('diaryInput').value;
+            await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).set({
+                uid: auth.currentUser.uid, date, content
+            });
+            alert("Kỷ niệm đã được lưu lại! ✨");
         }
     </script>
 </body>
