@@ -15,24 +15,23 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         * { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: #020617; background-image: radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%); background-attachment: fixed; color: #e2e8f0; }
+        body { background: #020617; background-image: radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%); background-attachment: fixed; color: #e2e8f0; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .tab-active { background: #6366f1; color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); }
         .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; font-size: 11px; cursor: pointer; border: 1px solid rgba(255,255,255,0.03); }
         .calendar-day.active { border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.1); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
-        .sortable-ghost { opacity: 0.1; background: #6366f1 !important; }
     </style>
 </head>
 <body class="min-h-screen pb-24">
 
     <div id="authSection" class="flex flex-col items-center justify-center min-h-screen p-6">
         <div class="glass p-10 rounded-[3rem] w-full max-w-sm text-center shadow-2xl">
-            <h1 class="text-3xl font-black mb-1 italic uppercase tracking-tighter">PEROUTINEPRO</h1>
-            <p class="text-slate-500 mb-10 text-[10px] uppercase font-bold italic">áp lực tạo kim cương</p>
+            <h1 class="text-3xl font-black mb-1 italic uppercase tracking-tighter text-white">PEROUTINEPRO</h1>
+            <p class="text-slate-500 mb-10 text-[10px] uppercase font-bold italic tracking-widest">áp lực tạo kim cương</p>
             <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-white/5 rounded-2xl border border-white/5 outline-none">
             <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-white/5 rounded-2xl border border-white/5 outline-none">
-            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold active:scale-95 transition">VÀO KỶ LUẬT</button>
+            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold active:scale-95 transition shadow-lg shadow-indigo-900/20">VÀO KỶ LUẬT</button>
         </div>
     </div>
 
@@ -41,7 +40,7 @@
             <div class="flex items-center gap-4">
                 <div class="relative">
                     <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow-lg">
-                    <button onclick="updateProfile()" class="absolute -bottom-1 -right-1 bg-indigo-600 text-white p-1 rounded-lg text-[10px] shadow-lg">✏️</button>
+                    <button onclick="updateProfile()" class="absolute -bottom-1 -right-1 bg-indigo-600 text-white p-1.5 rounded-lg text-[10px] shadow-lg">✏️</button>
                 </div>
                 <div>
                     <h2 class="text-lg font-bold text-white" id="userNameDisplay">Chào Đức dê zét</h2>
@@ -57,7 +56,7 @@
                 <div class="text-right"><span id="percentText" class="text-3xl font-black italic text-white">0%</span></div>
             </div>
             <div class="w-full bg-black/30 h-2 rounded-full overflow-hidden border border-white/5">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-rose-400 transition-all duration-1000" style="width: 0%"></div>
+                <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-rose-400 transition-all duration-1000 shadow-[0_0_15px_rgba(99,102,241,0.3)]" style="width: 0%"></div>
             </div>
         </div>
 
@@ -86,10 +85,7 @@
                         <h3 id="monthLabel" class="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Tháng 5, 2026</h3>
                         <button onclick="changeMonth(1)" class="text-indigo-400 p-1">▶</button>
                     </div>
-                    <div class="grid grid-cols-7 gap-1.5 text-center text-[9px] font-bold text-slate-700 uppercase mb-2">
-                        <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
-                    </div>
-                    <div id="calendarGrid" class="grid grid-cols-7 gap-1.5"></div>
+                    <div id="calendarGrid" class="grid grid-cols-7 gap-1.5 text-center text-[9px] font-bold text-slate-700 uppercase"></div>
                 </div>
                 <div class="glass p-6 rounded-3xl space-y-5">
                     <div class="flex justify-between items-center border-b border-white/5 pb-3">
@@ -125,22 +121,25 @@
 
         let currentSub = 'daily', viewMonth = new Date().getMonth(), viewYear = new Date().getFullYear();
         let unsubscribeTasks = null;
-        let lastDateChecked = new Date().toLocaleDateString();
 
-        document.getElementById('datePicker').valueAsDate = new Date();
+        // --- FIX DATE PICKER AUTO (GMT+7) ---
+        function setLocalDate() {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 10);
+            document.getElementById('datePicker').value = localISOTime;
+        }
+        setLocalDate();
 
-        // 1. Tự động chuyển ngày sau mỗi phút
         setInterval(() => {
-            const today = new Date().toLocaleDateString();
-            if(today !== lastDateChecked) {
-                lastDateChecked = today;
-                document.getElementById('datePicker').valueAsDate = new Date();
-                dateChanged();
-                console.log("Đã tự động chuyển sang ngày mới!");
+            const now = new Date();
+            if (now.getHours() === 0 && now.getMinutes() === 0) {
+                setLocalDate();
+                location.reload(); // Tự động reset hoàn toàn khi sang 12h đêm
             }
         }, 60000);
 
-        // 2. Auth & Logic chính
+        // --- LOGIC FIREBASE ---
         async function handleAction(type) {
             const e = document.getElementById('email').value, p = document.getElementById('password').value;
             try { await auth.signInWithEmailAndPassword(e, p); } catch (err) { alert(err.message); }
@@ -162,45 +161,37 @@
 
         function startTaskListener() {
             if (unsubscribeTasks) unsubscribeTasks();
-            unsubscribeTasks = db.collection("tasks")
-                .where("uid", "==", auth.currentUser.uid)
-                .onSnapshot(snap => { renderAll(snap); });
+            unsubscribeTasks = db.collection("tasks").where("uid", "==", auth.currentUser.uid).onSnapshot(snap => { renderAll(snap); });
         }
 
-        // --- THUẬT TOÁN STREAK THỰC TẾ ---
         function calculateRealStreak(allTasks) {
             if (allTasks.length === 0) return 0;
-            
             let streak = 0;
-            let checkDate = new Date(); // Bắt đầu từ hôm nay
+            let checkDate = new Date();
             
-            // Hàm kiểm tra 1 ngày có đạt kỷ luật hay không (>=80%)
             const isDaySuccessful = (dateStr) => {
-                let dailyTasksInDay = allTasks.filter(t => t.type === 'daily');
-                if (dailyTasksInDay.length === 0) return false;
-                
-                let doneInDay = dailyTasksInDay.filter(t => t.doneDates && t.doneDates.includes(dateStr)).length;
-                return (doneInDay / dailyTasksInDay.length) >= 0.8;
+                let dailyTasks = allTasks.filter(t => t.type === 'daily');
+                if (dailyTasks.length === 0) return false;
+                let done = dailyTasks.filter(t => t.doneDates && t.doneDates.includes(dateStr)).length;
+                return (done / dailyTasks.length) >= 0.8;
             };
 
-            // Kiểm tra ngược về quá khứ
+            // Kiểm tra liên tục ngược về quá khứ
             while (true) {
-                const dateStr = checkDate.toISOString().split('T')[0];
+                let dateStr = checkDate.toISOString().split('T')[0];
                 if (isDaySuccessful(dateStr)) {
                     streak++;
-                    checkDate.setDate(checkDate.getDate() - 1); // Lùi 1 ngày
+                    checkDate.setDate(checkDate.getDate() - 1);
                 } else {
-                    // Nếu hôm nay chưa đạt nhưng hôm qua đạt, thì vẫn tính streak của hôm qua
+                    // Nếu hôm nay chưa xong nhưng hôm qua xong, streak vẫn giữ của hôm qua
                     if (streak === 0) {
                         checkDate.setDate(checkDate.getDate() - 1);
-                        const yesterdayStr = checkDate.toISOString().split('T')[0];
-                        if (isDaySuccessful(yesterdayStr)) {
-                            // Tiếp tục vòng lặp nhưng ko cộng cho hôm nay
-                            checkDate.setDate(checkDate.getDate() + 1); // Reset lại để lùi đúng
+                        if (isDaySuccessful(checkDate.toISOString().split('T')[0])) {
+                            // Streak bắt đầu tính từ hôm qua
                         } else break;
                     } else break;
                 }
-                if (streak > 365) break; // Giới hạn an toàn
+                if (streak > 1000) break;
             }
             return streak;
         }
@@ -236,17 +227,14 @@
             const p = total === 0 ? 0 : Math.round((doneCount/total)*100);
             document.getElementById('progressBar').style.width = p + "%";
             document.getElementById('percentText').innerText = p + "%";
-            
-            // Cập nhật streak thực tế
-            const realStreak = calculateRealStreak(allTasks);
-            document.getElementById('streakDisplay').innerText = `🔥 ${realStreak} NGÀY`;
-            
+            document.getElementById('streakDisplay').innerText = `🔥 ${calculateRealStreak(allTasks)} NGÀY`;
             document.getElementById('summaryText').innerText = `${doneCount}/${total} Hoàn thành`;
+            
             initSortable();
             if(document.getElementById('detailsView').style.display === 'block') generateCalendar(allTasks);
         }
 
-        // --- CÁC HÀM CƠ BẢN (GIỮ NGUYÊN) ---
+        // --- CÁC HÀM TIỆN ÍCH ---
         async function addTask() {
             const text = document.getElementById('taskInput').value, date = document.getElementById('datePicker').value;
             if(!text) return;
@@ -260,12 +248,6 @@
                 if(!isDone) await ref.update({ doneDates: firebase.firestore.FieldValue.arrayUnion(date) });
                 else await ref.update({ doneDates: firebase.firestore.FieldValue.arrayRemove(date) });
             } else await ref.update({ done: !isDone });
-        }
-
-        async function updateProfile() {
-            const n = prompt("Tên của bạn:", auth.currentUser.displayName);
-            const a = prompt("Link ảnh đại diện:");
-            if(n || a) { await auth.currentUser.updateProfile({ displayName: n, photoURL: a }); location.reload(); }
         }
 
         function initSortable() {
@@ -326,7 +308,7 @@
 
         function changeMonth(s) { viewMonth += s; if(viewMonth>11){viewMonth=0; viewYear++;} if(viewMonth<0){viewMonth=11; viewYear--;} db.collection("tasks").where("uid", "==", auth.currentUser.uid).get().then(snap => renderAll(snap)); }
         async function generateCalendar(allTasks) {
-            const grid = document.getElementById('calendarGrid'); grid.innerHTML = "";
+            const grid = document.getElementById('calendarGrid'); grid.innerHTML = "<div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>";
             document.getElementById('monthLabel').innerText = `Tháng ${viewMonth + 1}, ${viewYear}`;
             const first = new Date(viewYear, viewMonth, 1).getDay(), days = new Date(viewYear, viewMonth + 1, 0).getDate();
             for(let i=0; i<first; i++) grid.appendChild(document.createElement('div'));
@@ -345,6 +327,12 @@
                 div.onclick = () => { document.getElementById('datePicker').value = dateStr; dateChanged(); };
                 grid.appendChild(div);
             }
+        }
+
+        async function updateProfile() {
+            const n = prompt("Tên của bạn:", auth.currentUser.displayName);
+            const a = prompt("Link ảnh đại diện:");
+            if(n || a) { await auth.currentUser.updateProfile({ displayName: n, photoURL: a }); location.reload(); }
         }
     </script>
 </body>
