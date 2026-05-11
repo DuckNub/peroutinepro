@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Motivation made by duc - Pro v12.1</title>
+    <title>Motivation made by duc - Pro v12.5</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕵️‍♂️</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
@@ -20,6 +21,8 @@
         .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; font-size: 11px; cursor: pointer; border: 1px solid rgba(255,255,255,0.03); }
         .calendar-day.active { border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.1); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
+        /* Hiệu ứng khi đang kéo */
+        .sortable-ghost { opacity: 0.3; background: #6366f1 !important; }
     </style>
 </head>
 <body class="min-h-screen pb-24">
@@ -29,9 +32,9 @@
             <div class="text-6xl mb-6">💎</div>
             <h1 class="text-3xl font-black mb-1 italic uppercase">PEROUTINEPRO</h1>
             <p class="text-slate-500 mb-10 text-[10px] uppercase font-bold italic">áp lực tạo kim cương</p>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-white/5 rounded-2xl border border-white/5 outline-none focus:border-indigo-500/40">
-            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-white/5 rounded-2xl border border-white/5 outline-none focus:border-indigo-500/40">
-            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold active:scale-95 transition shadow-lg shadow-indigo-900/20">VÀO KỶ LUẬT</button>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-white/5 rounded-2xl border border-white/5 outline-none">
+            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-white/5 rounded-2xl border border-white/5 outline-none">
+            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold shadow-lg shadow-indigo-900/20 active:scale-95 transition">VÀO KỶ LUẬT</button>
         </div>
     </div>
 
@@ -40,7 +43,7 @@
             <div class="flex items-center gap-4">
                 <div class="relative">
                     <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow-lg">
-                    <button onclick="updateProfile()" class="absolute -bottom-1 -right-1 bg-indigo-600 text-white p-1 rounded-lg text-[10px] shadow-lg hover:scale-110 transition-all">✏️</button>
+                    <button onclick="updateProfile()" class="absolute -bottom-1 -right-1 bg-indigo-600 text-white p-1 rounded-lg text-[10px] shadow-lg">✏️</button>
                 </div>
                 <div>
                     <h2 class="text-lg font-bold text-white" id="userNameDisplay">Chiến binh</h2>
@@ -61,29 +64,29 @@
         </div>
 
         <nav class="flex mb-8 p-1 glass rounded-2xl">
-            <button onclick="switchTab('tasks')" id="tabTasks" class="flex-1 py-2 text-xs font-bold rounded-xl transition tab-active uppercase tracking-widest">Nhiệm vụ</button>
-            <button onclick="switchTab('details')" id="tabDetails" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-xl transition uppercase tracking-widest">Chi tiết 📅</button>
+            <button onclick="switchTab('tasks')" id="tabTasks" class="flex-1 py-2 text-xs font-bold rounded-xl transition tab-active uppercase">Nhiệm vụ</button>
+            <button onclick="switchTab('details')" id="tabDetails" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-xl transition uppercase">Chi tiết 📅</button>
         </nav>
 
         <div id="contentBox">
             <div id="taskView">
                 <div class="flex gap-4 text-[10px] font-black uppercase tracking-widest text-slate-500 px-2 mb-4">
-                    <button onclick="switchSub('daily')" id="subD" class="text-indigo-400 border-b-2 border-indigo-400 pb-1 transition-all">Thói quen</button>
-                    <button onclick="switchSub('once')" id="subO" class="pb-1 transition-all">Việc lẻ</button>
+                    <button onclick="switchSub('daily')" id="subD" class="text-indigo-400 border-b-2 border-indigo-400 pb-1">Thói quen</button>
+                    <button onclick="switchSub('once')" id="subO" class="pb-1">Việc lẻ</button>
                 </div>
                 <div class="flex gap-2 mb-8 glass p-1.5 rounded-2xl">
-                    <input type="text" id="taskInput" placeholder="Thêm mục tiêu tiếp theo..." class="flex-1 p-3 bg-transparent outline-none text-sm ml-2">
-                    <button onclick="addTask()" class="bg-indigo-600 w-11 h-11 rounded-xl font-bold text-2xl active:scale-90 transition shadow-lg shadow-indigo-600/20">+</button>
+                    <input type="text" id="taskInput" placeholder="Thêm mục tiêu..." class="flex-1 p-3 bg-transparent outline-none text-sm ml-2">
+                    <button onclick="addTask()" class="bg-indigo-600 w-11 h-11 rounded-xl font-bold text-2xl active:scale-90 transition">+</button>
                 </div>
-                <div id="taskList" class="space-y-3"></div>
+                <div id="taskList" class="space-y-3 min-h-[50px]"></div>
             </div>
 
             <div id="detailsView" class="hidden space-y-6">
                 <div class="glass p-5 rounded-3xl">
                     <div class="flex justify-between items-center mb-4 px-2">
-                        <button onclick="changeMonth(-1)" class="text-indigo-400 hover:text-white p-1">◀</button>
+                        <button onclick="changeMonth(-1)" class="text-indigo-400 p-1">◀</button>
                         <h3 id="monthLabel" class="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Tháng 5, 2026</h3>
-                        <button onclick="changeMonth(1)" class="text-indigo-400 hover:text-white p-1">▶</button>
+                        <button onclick="changeMonth(1)" class="text-indigo-400 p-1">▶</button>
                     </div>
                     <div class="grid grid-cols-7 gap-1.5 text-center text-[9px] font-bold text-slate-700 uppercase mb-2">
                         <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
@@ -94,31 +97,15 @@
                 <div class="glass p-6 rounded-3xl space-y-5">
                     <div class="flex justify-between items-center border-b border-white/5 pb-3">
                         <h3 class="text-xs font-black uppercase text-indigo-400 italic">Báo cáo kỷ luật</h3>
-                        <span id="summaryText" class="text-[10px] text-slate-500 font-bold">Đang tải...</span>
+                        <span id="summaryText" class="text-[10px] text-slate-500 font-bold">0/0</span>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="space-y-1">
-                            <label class="text-[9px] uppercase font-black text-slate-500">📱 Điện thoại</label>
-                            <input type="text" id="reportScreenTime" placeholder="3h 20p" class="w-full bg-white/5 p-3 rounded-xl text-xs outline-none border border-white/5 focus:border-indigo-500/40">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[9px] uppercase font-black text-slate-500">⚡ Năng lượng</label>
-                            <input type="text" id="reportEnergy" placeholder="Tốt/Đuối" class="w-full bg-white/5 p-3 rounded-xl text-xs outline-none border border-white/5 focus:border-indigo-500/40">
-                        </div>
+                        <input type="text" id="reportScreenTime" placeholder="📱 Điện thoại" class="bg-white/5 p-3 rounded-xl text-xs outline-none border border-white/5">
+                        <input type="text" id="reportEnergy" placeholder="⚡ Năng lượng" class="bg-white/5 p-3 rounded-xl text-xs outline-none border border-white/5">
                     </div>
-                    
-                    <div class="space-y-1">
-                        <label class="text-[9px] uppercase font-black text-slate-500">🏆 Thành tựu tự hào nhất</label>
-                        <input type="text" id="reportBigWin" placeholder="Hôm nay bạn làm được gì?" class="w-full bg-white/5 p-3 rounded-xl text-xs outline-none border border-white/5 focus:border-indigo-500/40">
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="text-[9px] uppercase font-black text-slate-500">✍️ Nhật ký & Tâm sự</label>
-                        <textarea id="diaryInput" placeholder="Viết cho chính mình..." class="w-full h-24 bg-white/5 rounded-2xl p-4 text-xs outline-none border border-white/5 focus:border-indigo-500/40"></textarea>
-                    </div>
-
-                    <button onclick="saveDailyReport()" class="w-full bg-indigo-600 p-4 rounded-2xl text-xs font-bold shadow-lg shadow-indigo-900/30 active:scale-95 transition">LƯU BÁO CÁO NGÀY ✨</button>
+                    <input type="text" id="reportBigWin" placeholder="🏆 Thành tựu lớn nhất" class="w-full bg-white/5 p-3 rounded-xl text-xs outline-none border border-white/5">
+                    <textarea id="diaryInput" placeholder="✍️ Nhật ký..." class="w-full h-24 bg-white/5 rounded-2xl p-4 text-xs outline-none border border-white/5"></textarea>
+                    <button onclick="saveDailyReport()" class="w-full bg-indigo-600 p-4 rounded-2xl text-xs font-bold shadow-lg">LƯU BÁO CÁO ✨</button>
                 </div>
             </div>
         </div>
@@ -142,17 +129,17 @@
         let currentSub = 'daily', viewMonth = new Date().getMonth(), viewYear = new Date().getFullYear();
         document.getElementById('datePicker').valueAsDate = new Date();
 
-        // --- AUTH & PROFILE ---
+        // 1. Auth & Profile
         async function handleAction(type) {
             const e = document.getElementById('email').value, p = document.getElementById('password').value;
-            try { await auth.signInWithEmailAndPassword(e, p); } catch (err) { alert("Lỗi đăng nhập: " + err.message); }
+            try { await auth.signInWithEmailAndPassword(e, p); } catch (err) { alert(err.message); }
         }
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('mainSection').classList.remove('hidden');
-                document.getElementById('userNameDisplay').innerText = "Chào " + (user.displayName || "Ngọc") + "!";
+                document.getElementById('userNameDisplay').innerText = "Chào " + (user.displayName || "Ngọc");
                 if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
                 loadData();
             } else {
@@ -164,21 +151,13 @@
         async function updateProfile() {
             const n = prompt("Tên của bạn:", auth.currentUser.displayName || "Ngọc");
             const a = prompt("Link ảnh đại diện (URL):", auth.currentUser.photoURL || "");
-            if(n !== null || a !== null) {
-                try {
-                    await auth.currentUser.updateProfile({ 
-                        displayName: n || auth.currentUser.displayName, 
-                        photoURL: a || auth.currentUser.photoURL 
-                    });
-                    location.reload();
-                } catch(err) { alert("Không thể cập nhật: " + err.message); }
-            }
+            if(n || a) { await auth.currentUser.updateProfile({ displayName: n, photoURL: a }); location.reload(); }
         }
 
-        // --- NAVIGATION ---
+        // 2. Navigation
         function switchTab(tab) {
-            document.getElementById('tabTasks').className = tab === 'tasks' ? 'flex-1 py-2 text-xs font-bold rounded-xl transition tab-active uppercase tracking-widest' : 'flex-1 py-2 text-xs font-bold text-slate-500 rounded-xl transition uppercase tracking-widest';
-            document.getElementById('tabDetails').className = tab === 'details' ? 'flex-1 py-2 text-xs font-bold rounded-xl transition tab-active uppercase tracking-widest' : 'flex-1 py-2 text-xs font-bold text-slate-500 rounded-xl transition uppercase tracking-widest';
+            document.getElementById('tabTasks').className = tab === 'tasks' ? 'flex-1 py-2 text-xs font-bold rounded-xl transition tab-active uppercase' : 'flex-1 py-2 text-xs font-bold text-slate-500 rounded-xl transition uppercase';
+            document.getElementById('tabDetails').className = tab === 'details' ? 'flex-1 py-2 text-xs font-bold rounded-xl transition tab-active uppercase' : 'flex-1 py-2 text-xs font-bold text-slate-500 rounded-xl transition uppercase';
             document.getElementById('taskView').style.display = tab === 'tasks' ? 'block' : 'none';
             document.getElementById('detailsView').style.display = tab === 'details' ? 'block' : 'none';
             if(tab === 'details') { generateCalendar(); loadDailyReport(); }
@@ -186,18 +165,22 @@
 
         function switchSub(type) {
             currentSub = type;
-            document.getElementById('subD').className = type === 'daily' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1 transition-all' : 'pb-1 transition-all';
-            document.getElementById('subO').className = type === 'once' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1 transition-all' : 'pb-1 transition-all';
+            document.getElementById('subD').className = type === 'daily' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1' : 'pb-1';
+            document.getElementById('subO').className = type === 'once' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1' : 'pb-1';
             loadData();
         }
 
         function dateChanged() { loadData(); if(document.getElementById('detailsView').style.display === 'block') loadDailyReport(); }
 
-        // --- TASK LOGIC ---
+        // 3. Task Logic (Có thêm Edit & Sort Order)
         async function addTask() {
             const text = document.getElementById('taskInput').value, date = document.getElementById('datePicker').value;
             if(!text) return;
-            await db.collection("tasks").add({ uid: auth.currentUser.uid, text, type: currentSub, date, done: false, doneDates: [], timestamp: Date.now() });
+            // Thêm order để lưu vị trí
+            await db.collection("tasks").add({ 
+                uid: auth.currentUser.uid, text, type: currentSub, date, done: false, doneDates: [], 
+                timestamp: Date.now(), order: Date.now() 
+            });
             document.getElementById('taskInput').value = "";
             loadData();
         }
@@ -205,7 +188,8 @@
         async function loadData() {
             const date = document.getElementById('datePicker').value, list = document.getElementById('taskList');
             list.innerHTML = "";
-            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).get();
+            // Sắp xếp theo order đã lưu
+            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).orderBy("order", "asc").get();
             let doneCount = 0, total = 0;
 
             snap.forEach(doc => {
@@ -218,11 +202,14 @@
                 if(data.type === currentSub) {
                     if(currentSub === 'once' && data.date !== date) return;
                     const item = document.createElement('div');
-                    item.className = `glass p-4 rounded-2xl flex justify-between items-center transition-all ${isDoneToday ? 'opacity-30 grayscale' : ''}`;
-                    item.innerHTML = `<span class="text-sm font-bold ${isDoneToday ? 'line-through text-slate-500' : 'text-white'}">${data.text}</span>
+                    item.setAttribute('data-id', doc.id); // Lưu ID để kéo thả
+                    item.className = `glass p-4 rounded-2xl flex justify-between items-center cursor-move transition-all ${isDoneToday ? 'opacity-30' : ''}`;
+                    item.innerHTML = `
+                        <span class="text-sm font-bold ${isDoneToday ? 'line-through text-slate-500' : 'text-white'}">${data.text}</span>
                         <div class="flex gap-2">
                             <button onclick="toggleTask('${doc.id}', ${isDoneToday})" class="w-9 h-9 rounded-full ${isDoneToday ? 'bg-indigo-500' : 'bg-white/5'} flex items-center justify-center border border-white/10 transition-all">${isDoneToday ? '✓' : ''}</button>
-                            <button onclick="deleteTask('${doc.id}')" class="p-2 opacity-10 hover:opacity-100">🗑️</button>
+                            <button onclick="editTask('${doc.id}', '${data.text}')" class="p-2 opacity-20 hover:opacity-100">📝</button>
+                            <button onclick="deleteTask('${doc.id}')" class="p-2 opacity-20 hover:opacity-100">🗑️</button>
                         </div>`;
                     list.appendChild(item);
                 }
@@ -233,6 +220,35 @@
             document.getElementById('percentText').innerText = p + "%";
             document.getElementById('streakCount').innerText = (p >= 80 ? "🔥 " : "🌑 ") + (p >= 80 ? "1+" : "0") + " Ngày";
             document.getElementById('summaryText').innerText = `${doneCount}/${total} Hoàn thành`;
+
+            // Kích hoạt kéo thả sau khi load xong list
+            initSortable();
+        }
+
+        // Khởi tạo kéo thả
+        function initSortable() {
+            const list = document.getElementById('taskList');
+            new Sortable(list, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: async function() {
+                    const items = list.querySelectorAll('.glass');
+                    const batch = db.batch();
+                    items.forEach((item, index) => {
+                        const id = item.getAttribute('data-id');
+                        batch.update(db.collection("tasks").doc(id), { order: index });
+                    });
+                    await batch.commit();
+                }
+            });
+        }
+
+        async function editTask(id, oldText) {
+            const newText = prompt("Chỉnh sửa nhiệm vụ:", oldText);
+            if(newText && newText !== oldText) {
+                await db.collection("tasks").doc(id).update({ text: newText });
+                loadData();
+            }
         }
 
         async function toggleTask(id, isDone) {
@@ -244,9 +260,9 @@
             loadData();
         }
 
-        async function deleteTask(id) { if(confirm("Xóa mục tiêu?")) { await db.collection("tasks").doc(id).delete(); loadData(); } }
+        async function deleteTask(id) { if(confirm("Xóa nhé?")) { await db.collection("tasks").doc(id).delete(); loadData(); } }
 
-        // --- REPORT & CALENDAR ---
+        // --- REPORT & CALENDAR (GIỮ NGUYÊN) ---
         async function loadDailyReport() {
             const date = document.getElementById('datePicker').value;
             const doc = await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).get();
@@ -263,15 +279,15 @@
 
         async function saveDailyReport() {
             const date = document.getElementById('datePicker').value;
-            const report = {
+            const r = {
                 uid: auth.currentUser.uid, date,
                 content: document.getElementById('diaryInput').value,
                 screenTime: document.getElementById('reportScreenTime').value,
                 energy: document.getElementById('reportEnergy').value,
                 bigWin: document.getElementById('reportBigWin').value
             };
-            await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).set(report, { merge: true });
-            alert("Đã ghi nhận nỗ lực của bạn! 💪");
+            await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).set(r, { merge: true });
+            alert("Đã lưu báo cáo ✨");
         }
 
         function changeMonth(s) { viewMonth += s; if(viewMonth>11){viewMonth=0; viewYear++;} if(viewMonth<0){viewMonth=11; viewYear--;} generateCalendar(); }
@@ -281,13 +297,11 @@
             const first = new Date(viewYear, viewMonth, 1).getDay(), days = new Date(viewYear, viewMonth + 1, 0).getDate();
             const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).get();
             const all = []; snap.forEach(d => all.push(d.data()));
-
             for(let i=0; i<first; i++) grid.appendChild(document.createElement('div'));
             for(let d=1; d<=days; d++) {
                 const div = document.createElement('div'), dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 div.className = `calendar-day ${document.getElementById('datePicker').value === dateStr ? 'active' : ''}`;
                 div.innerHTML = `<span>${d}</span>`;
-                
                 let done = 0, totalInDay = 0;
                 all.forEach(t => {
                     if(t.type === 'daily' || t.date === dateStr) {
