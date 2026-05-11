@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kỷ Luật Cá Nhân - Perfect Routine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+
+    <div id="authSection" class="flex flex-col items-center justify-center h-screen p-4">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-700">
+            <h1 class="text-3xl font-bold mb-6 text-center text-blue-400">🔥 Kỷ Luật Việt</h1>
+            <input type="email" id="email" placeholder="Email của bạn" class="w-full p-3 mb-3 bg-gray-700 rounded border border-gray-600 focus:outline-none focus:border-blue-500 text-white">
+            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-3 mb-6 bg-gray-700 rounded border border-gray-600 focus:outline-none focus:border-blue-500 text-white">
+            <div class="flex gap-3">
+                <button onclick="handleAction('signup')" class="flex-1 bg-gray-600 hover:bg-gray-500 p-3 rounded-lg font-semibold transition text-white">Đăng ký</button>
+                <button onclick="handleAction('login')" class="flex-1 bg-blue-600 hover:bg-blue-500 p-3 rounded-lg font-semibold transition text-white">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainSection" class="hidden max-w-2xl mx-auto p-4 pb-20">
+        <header class="flex justify-between items-center py-6">
+            <div>
+                <h2 class="text-xl font-bold text-white" id="userNameDisplay">Chào bạn!</h2>
+                <p class="text-orange-400 font-bold">🔥 Streak hiện tại: <span id="streakCount">0</span> ngày</p>
+            </div>
+            <button onclick="auth.signOut()" class="text-gray-400 text-sm hover:text-white underline">Đăng xuất</button>
+        </header>
+
+        <div class="bg-gray-800 p-6 rounded-2xl mb-6 border border-gray-700">
+            <div class="flex justify-between items-end mb-4">
+                <div>
+                    <label class="text-xs text-gray-400 uppercase">Đang xem ngày:</label>
+                    <input type="date" id="datePicker" class="bg-transparent text-xl font-bold block focus:outline-none cursor-pointer text-white" onchange="loadData()">
+                </div>
+                <div class="text-right">
+                    <span id="percentText" class="text-2xl font-bold text-blue-400">0%</span>
+                </div>
+            </div>
+            <div class="w-full bg-gray-700 h-3 rounded-full overflow-hidden">
+                <div id="progressBar" class="bg-blue-500 h-full w-0 transition-all duration-500"></div>
+            </div>
+            <p id="statusNote" class="text-xs mt-2 italic text-gray-400 font-medium">Cần ít nhất 80% để giữ Streak</p>
+        </div>
+
+        <div class="flex gap-2 mb-8">
+            <input type="text" id="taskInput" placeholder="Thêm thói quen mới..." class="flex-1 p-3 bg-gray-800 rounded-xl border border-gray-700 focus:outline-none text-white">
+            <button onclick="addTask()" class="bg-blue-600 px-6 rounded-xl font-bold hover:bg-blue-500 text-white">+</button>
+        </div>
+
+        <div id="taskList" class="space-y-3 text-white"></div>
+    </div>
+
+    <script>
+        // FIREBASE CONFIG ĐÃ ĐƯỢC ĐIỀN SẴN
+        const firebaseConfig = {
+            apiKey: "AIzaSyDR2TYq-l5Fxzcx5dQ0a6OUEOHIQItZ2gE",
+            authDomain: "perfect-routine-pro.firebaseapp.com",
+            projectId: "perfect-routine-pro",
+            storageBucket: "perfect-routine-pro.firebasestorage.app",
+            messagingSenderId: "1032207716162",
+            appId: "1:1032207716162:web:8f372b2d282dff5baa42db",
+            measurementId: "G-BNQJBQ9YGP"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        document.getElementById('datePicker').valueAsDate = new Date();
+
+        async function handleAction(type) {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            if(!email || !pass) return alert("Vui lòng nhập đủ Email và Mật khẩu");
+            try {
+                if(type === 'login') await auth.signInWithEmailAndPassword(email, pass);
+                else await auth.createUserWithEmailAndPassword(email, pass);
+            } catch (err) { alert("Lỗi: " + err.message); }
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('mainSection').classList.remove('hidden');
+                document.getElementById('userNameDisplay').innerText = `Chào, ${user.email.split('@')[0]}!`;
+                loadData();
+            } else {
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('mainSection').classList.add('hidden');
+            }
+        });
+
+        async function addTask() {
+            const text = document.getElementById('taskInput').value;
+            const date = document.getElementById('datePicker').value;
+            if (!text) return;
+
+            await db.collection("daily_tasks").add({
+                uid: auth.currentUser.uid,
+                text: text,
+                date: date,
+                done: false,
+                timestamp: Date.now()
+            });
+            document.getElementById('taskInput').value = "";
+            loadData();
+        }
+
+        async function loadData() {
+            const date = document.getElementById('datePicker').value;
+            const snapshot = await db.collection("daily_tasks")
+                .where("uid", "==", auth.currentUser.uid)
+                .where("date", "==", date)
+                .get();
+
+            const list = document.getElementById('taskList');
+            list.innerHTML = "";
+            let doneCount = 0;
+            let total = 0;
+
+            snapshot.forEach(doc => {
+                total++;
+                const data = doc.data();
+                if (data.done) doneCount++;
+
+                const item = document.createElement('div');
+                item.className = `flex justify-between items-center p-4 rounded-xl border ${data.done ? 'bg-blue-900/40 border-blue-500' : 'bg-gray-800 border-gray-700'}`;
+                item.innerHTML = `
+                    <span class="${data.done ? 'line-through text-gray-400' : 'text-white'}">${data.text}</span>
+                    <div class="flex gap-2">
+                        <button onclick="toggleTask('${doc.id}', ${data.done})" class="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition">${data.done ? '✅' : '✔️'}</button>
+                        <button onclick="deleteTask('${doc.id}')" class="text-red-500 hover:scale-110 transition">🗑️</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            updateProgress(doneCount, total);
+        }
+
+        async function toggleTask(id, currentStatus) {
+            await db.collection("daily_tasks").doc(id).update({ done: !currentStatus });
+            loadData();
+        }
+
+        async function deleteTask(id) {
+            if(confirm("Bạn muốn xóa nhiệm vụ này?")) {
+                await db.collection("daily_tasks").doc(id).delete();
+                loadData();
+            }
+        }
+
+        function updateProgress(done, total) {
+            const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+            const bar = document.getElementById('progressBar');
+            bar.style.width = percent + "%";
+            document.getElementById('percentText').innerText = percent + "%";
+            
+            if (percent >= 80) {
+                bar.className = "progress-bar bg-green-500 h-full transition-all duration-500";
+                document.getElementById('statusNote').innerText = "Đã đạt mục tiêu kỷ luật! 🔥";
+                document.getElementById('statusNote').className = "text-xs mt-2 italic text-green-400 font-bold";
+            } else {
+                bar.className = "progress-bar bg-blue-500 h-full transition-all duration-500";
+                document.getElementById('statusNote').innerText = "Cần ít nhất 80% để giữ Streak";
+                document.getElementById('statusNote').className = "text-xs mt-2 italic text-gray-400";
+            }
+        }
+    </script>
+</body>
+</html>
