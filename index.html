@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Motivation by Duc</title>
+    <title>Motivation made by duc</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕵️‍♂️</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,37 +17,34 @@
         
         body { 
             background: #020617;
-            background-image: radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+            background-image: radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
                               radial-gradient(at 0% 100%, rgba(244, 63, 94, 0.08) 0px, transparent 50%);
             background-attachment: fixed;
         }
 
         .glass-panel { 
             background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(20px) saturate(160%); 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px) saturate(180%); 
+            border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
         .tab-active { 
             background: rgba(99, 102, 241, 0.8);
             color: white;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
-        /* Calendar Styles */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
         .calendar-day { 
             aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
             border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-            border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.03);
         }
-        .calendar-day:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
-        .calendar-day.active { border: 1px solid #6366f1; background: rgba(99, 102, 241, 0.2); }
-        .streak-icon { font-size: 10px; margin-top: 2px; }
+        .calendar-day:hover { background: rgba(255,255,255,0.1); }
+        .calendar-day.active { border: 1.5px solid #6366f1; background: rgba(99, 102, 241, 0.2); }
+        .streak-icon { font-size: 10px; margin-top: 1px; }
 
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
     </style>
 </head>
 <body class="text-slate-200 min-h-screen pb-24">
@@ -55,17 +52,17 @@
     <div id="authSection" class="flex flex-col items-center justify-center min-h-screen p-6">
         <div class="glass-panel p-10 rounded-[3rem] w-full max-w-sm text-center">
             <div class="text-6xl mb-6">💎</div>
-            <h1 class="text-3xl font-black mb-1 text-white italic">PEROUTINEPRO</h1>
-            <p class="text-slate-400 mb-10 text-[10px] uppercase tracking-[0.3em] font-semibold">Áp lực tạo kim cương</p>
-            <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-white/5 rounded-2xl border border-white/10 outline-none">
-            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-white/5 rounded-2xl border border-white/10 outline-none">
-            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold shadow-lg transition active:scale-95">Bắt đầu kỷ luật</button>
+            <h1 class="text-3xl font-black mb-1 text-white italic tracking-tighter uppercase">PEROUTINEPRO</h1>
+            <p class="text-slate-500 mb-10 text-[10px] uppercase tracking-[0.3em] font-bold italic">áp lực tạo kim cương</p>
+            <input type="email" id="email" placeholder="Email" class="w-full p-4 mb-3 bg-white/5 rounded-2xl border border-white/5 outline-none focus:border-indigo-500/40">
+            <input type="password" id="password" placeholder="Mật khẩu" class="w-full p-4 mb-8 bg-white/5 rounded-2xl border border-white/5 outline-none focus:border-indigo-500/40">
+            <button onclick="handleAction('login')" class="w-full bg-indigo-600 p-4 rounded-2xl font-bold hover:bg-indigo-500 transition active:scale-95 shadow-lg shadow-indigo-900/20">BẮT ĐẦU KỶ LUẬT</button>
         </div>
     </div>
 
     <div id="mainSection" class="hidden w-full max-w-xl mx-auto p-4 sm:p-6">
         
-        <header class="flex justify-between items-center mb-10 pt-6">
+        <header class="flex justify-between items-center mb-8 pt-6">
             <div class="flex items-center gap-4">
                 <div class="relative">
                     <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-14 h-14 rounded-2xl object-cover border-2 border-white/10 shadow-xl">
@@ -73,52 +70,62 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-extrabold text-white" id="userNameDisplay">Chào Ngọc</h2>
-                    <span id="streakCount" class="bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded text-[10px] font-black uppercase">🔥 0 Ngày</span>
+                    <span id="streakCount" class="bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-tighter">🔥 0 Ngày</span>
                 </div>
             </div>
-            <button onclick="auth.signOut()" class="glass-panel w-10 h-10 rounded-xl flex items-center justify-center opacity-50 hover:opacity-100 transition">🚪</button>
+            <button onclick="auth.signOut()" class="p-3 opacity-30 hover:opacity-100 transition text-2xl">🚪</button>
         </header>
 
-        <div class="glass-panel p-6 rounded-[2rem] mb-8">
-            <div class="flex justify-between items-center mb-5">
-                <input type="date" id="datePicker" class="bg-transparent text-xl font-bold text-indigo-400 outline-none" onchange="dateChanged()">
-                <span id="percentText" class="text-3xl font-black text-white">0%</span>
+        <div class="glass-panel p-6 rounded-[2.2rem] mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <input type="date" id="datePicker" class="bg-transparent text-lg font-bold text-indigo-400 outline-none uppercase" onchange="dateChanged()">
+                <span id="percentText" class="text-3xl font-black text-white italic">0%</span>
             </div>
-            <div class="w-full bg-black/20 h-2.5 rounded-full overflow-hidden border border-white/5">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-rose-500 transition-all duration-1000" style="width: 0%"></div>
+            <div class="w-full bg-black/30 h-2.5 rounded-full overflow-hidden border border-white/5">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-rose-400 transition-all duration-1000" style="width: 0%"></div>
             </div>
         </div>
 
-        <nav class="flex mb-8 p-1.5 glass-panel rounded-2xl">
-            <button onclick="switchTab('daily')" id="tabDaily" class="flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active">Công việc</button>
-            <button onclick="switchTab('achievements')" id="tabAchieve" class="flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition">Lịch & Nhật ký</button>
+        <nav class="flex mb-8 p-1 glass-panel rounded-2xl">
+            <button onclick="switchMainTab('tasks')" id="tabTasks" class="flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active">NHIỆM VỤ</button>
+            <button onclick="switchMainTab('history')" id="tabHistory" class="flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition">LỊCH & NHẬT KÝ</button>
         </nav>
 
         <div id="contentBox">
             <div id="taskView">
-                <div class="flex gap-2 mb-8 glass-panel p-1.5 rounded-2xl">
-                    <input type="text" id="taskInput" placeholder="Mục tiêu tiếp theo..." class="flex-1 p-3 bg-transparent outline-none text-sm ml-2">
-                    <button onclick="addTask()" class="bg-indigo-600 w-11 h-11 rounded-xl font-bold text-2xl active:scale-90 transition">+</button>
+                <div class="flex gap-4 mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 px-2">
+                    <button onclick="switchSubTask('daily')" id="subDaily" class="text-indigo-400 border-b-2 border-indigo-400 pb-1 transition-all">Thói quen (Mỗi ngày)</button>
+                    <button onclick="switchSubTask('once')" id="subOnce" class="pb-1 transition-all">Việc cần làm (Một lần)</button>
                 </div>
+
+                <div class="flex gap-2 mb-8 glass-panel p-1.5 rounded-2xl">
+                    <input type="text" id="taskInput" placeholder="Thêm mục tiêu mới..." class="flex-1 p-3 bg-transparent outline-none text-sm ml-2">
+                    <button onclick="addTask()" class="bg-indigo-600 w-11 h-11 rounded-xl font-bold text-2xl active:scale-90 transition shadow-lg">+</button>
+                </div>
+
                 <div id="taskList" class="space-y-4"></div>
             </div>
 
-            <div id="achievementView" class="hidden space-y-8">
+            <div id="historyView" class="hidden space-y-8">
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Lịch vinh danh</h3>
-                        <span class="text-[10px] text-indigo-400 font-bold" id="monthLabel">Tháng 5, 2026</span>
+                        <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Lịch vinh danh</h3>
+                        <div class="flex items-center gap-3 text-indigo-400">
+                            <button onclick="changeMonth(-1)" class="p-1 hover:text-white transition">◀</button>
+                            <span class="text-[10px] font-bold min-w-[80px] text-center" id="monthLabel">Tháng 5, 2026</span>
+                            <button onclick="changeMonth(1)" class="p-1 hover:text-white transition">▶</button>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-7 gap-2 text-center text-[9px] font-black text-slate-600 uppercase mb-3">
+                    <div class="grid grid-cols-7 gap-2 text-center text-[9px] font-black text-slate-700 uppercase mb-3">
                         <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
                     </div>
-                    <div id="calendarGrid" class="calendar-grid"></div>
+                    <div id="calendarGrid" class="grid grid-cols-7 gap-2"></div>
                 </div>
 
                 <div class="glass-panel p-6 rounded-3xl">
-                    <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Nhật ký ngày <span id="diaryDateLabel">...</span></h3>
-                    <textarea id="diaryInput" placeholder="Hôm nay bạn cảm thấy thế nào? Những gì đã làm tốt..." class="w-full h-32 bg-white/5 rounded-2xl p-4 text-sm outline-none border border-white/5 focus:border-indigo-500/30 transition-all"></textarea>
-                    <button onclick="saveDiary()" class="mt-4 w-full bg-slate-800 p-3 rounded-xl text-xs font-bold hover:bg-slate-700 transition">Lưu nhật ký</button>
+                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 italic">Nhật ký ngày này</h3>
+                    <textarea id="diaryInput" placeholder="Ngọc cảm thấy thế nào? Những gì đã làm tốt..." class="w-full h-32 bg-white/5 rounded-2xl p-4 text-sm outline-none border border-white/5 focus:border-indigo-500/30 transition-all"></textarea>
+                    <button onclick="saveDiary()" class="mt-4 w-full bg-slate-800 p-3 rounded-xl text-xs font-bold hover:bg-indigo-600 transition shadow-md">LƯU KỶ NIỆM ✨</button>
                 </div>
             </div>
         </div>
@@ -139,7 +146,10 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let currentTab = 'daily';
+        let currentSubTask = 'daily';
+        let viewMonth = new Date().getMonth();
+        let viewYear = new Date().getFullYear();
+
         document.getElementById('datePicker').valueAsDate = new Date();
 
         async function handleAction(type) {
@@ -155,7 +165,6 @@
                 document.getElementById('userNameDisplay').innerText = "Chào " + (user.displayName || "Ngọc");
                 if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
                 loadData();
-                generateCalendar();
             } else {
                 document.getElementById('authSection').classList.remove('hidden');
                 document.getElementById('mainSection').classList.add('hidden');
@@ -165,28 +174,31 @@
         async function updateProfile() {
             const n = prompt("Tên của bạn:", auth.currentUser.displayName || "Ngọc");
             const a = prompt("Link ảnh đại diện:", auth.currentUser.photoURL || "");
-            if(n || a) {
-                await auth.currentUser.updateProfile({ displayName: n, photoURL: a });
-                location.reload();
-            }
+            if(n || a) { await auth.currentUser.updateProfile({ displayName: n, photoURL: a }); location.reload(); }
         }
 
-        function switchTab(tab) {
-            currentTab = tab;
-            document.getElementById('tabDaily').className = tab === 'daily' ? "flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active" : "flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition";
-            document.getElementById('tabAchieve').className = tab === 'achievements' ? "flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active" : "flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition";
-            
-            document.getElementById('taskView').style.display = tab === 'daily' ? 'block' : 'none';
-            document.getElementById('achievementView').style.display = tab === 'achievements' ? 'block' : 'none';
-            if(tab === 'achievements') {
-                generateCalendar();
-                loadDiary();
-            }
+        function switchMainTab(tab) {
+            document.getElementById('tabTasks').className = tab === 'tasks' ? "flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active" : "flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition";
+            document.getElementById('tabHistory').className = tab === 'history' ? "flex-1 py-2.5 text-xs font-bold rounded-xl transition tab-active" : "flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-xl transition";
+            document.getElementById('taskView').style.display = tab === 'tasks' ? 'block' : 'none';
+            document.getElementById('historyView').style.display = tab === 'history' ? 'block' : 'none';
+            if(tab === 'history') { generateCalendar(); loadDiary(); }
         }
 
-        function dateChanged() {
+        function switchSubTask(type) {
+            currentSubTask = type;
+            document.getElementById('subDaily').className = type === 'daily' ? "text-indigo-400 border-b-2 border-indigo-400 pb-1 transition-all" : "pb-1 transition-all";
+            document.getElementById('subOnce').className = type === 'once' ? "text-indigo-400 border-b-2 border-indigo-400 pb-1 transition-all" : "pb-1 transition-all";
             loadData();
-            if(currentTab === 'achievements') loadDiary();
+        }
+
+        function dateChanged() { loadData(); if(document.getElementById('historyView').style.display === 'block') loadDiary(); }
+
+        function changeMonth(step) {
+            viewMonth += step;
+            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            generateCalendar();
         }
 
         async function addTask() {
@@ -194,30 +206,32 @@
             const date = document.getElementById('datePicker').value;
             if(!text) return;
             await db.collection("tasks").add({
-                uid: auth.currentUser.uid, text, type: 'daily', date, doneDates: [], timestamp: Date.now()
+                uid: auth.currentUser.uid, text, type: currentSubTask, date, done: false, doneDates: [], timestamp: Date.now()
             });
             document.getElementById('taskInput').value = "";
             loadData();
-            generateCalendar();
         }
 
         async function loadData() {
             const date = document.getElementById('datePicker').value;
             const list = document.getElementById('taskList');
             list.innerHTML = "";
-            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).get();
             
+            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).where("type", "==", currentSubTask).get();
             let doneCount = 0, total = 0;
+
             snap.forEach(doc => {
-                total++;
                 const data = doc.data();
-                const isDone = data.doneDates && data.doneDates.includes(date);
+                if(currentSubTask === 'once' && data.date !== date) return;
+                
+                total++;
+                const isDone = currentSubTask === 'daily' ? (data.doneDates && data.doneDates.includes(date)) : data.done;
                 if(isDone) doneCount++;
 
                 const item = document.createElement('div');
-                item.className = `glass-panel p-4 rounded-2xl flex justify-between items-center ${isDone ? 'opacity-40' : ''}`;
+                item.className = `glass-panel p-4 rounded-2xl flex justify-between items-center ${isDone ? 'opacity-30' : ''}`;
                 item.innerHTML = `
-                    <span class="text-sm font-semibold ${isDone ? 'line-through text-slate-500' : 'text-white'}">${data.text}</span>
+                    <span class="text-sm font-bold ${isDone ? 'line-through text-slate-500' : 'text-white'}">${data.text}</span>
                     <div class="flex gap-2">
                         <button onclick="toggleTask('${doc.id}', ${isDone})" class="w-9 h-9 rounded-full ${isDone ? 'bg-indigo-500' : 'bg-white/5'} flex items-center justify-center border border-white/10 transition-all">${isDone ? '✓' : ''}</button>
                         <button onclick="deleteTask('${doc.id}')" class="p-2 opacity-10 hover:opacity-100">🗑️</button>
@@ -231,15 +245,14 @@
         async function toggleTask(id, isDone) {
             const date = document.getElementById('datePicker').value;
             const ref = db.collection("tasks").doc(id);
-            if(!isDone) await ref.update({ doneDates: firebase.firestore.FieldValue.arrayUnion(date) });
-            else await ref.update({ doneDates: firebase.firestore.FieldValue.arrayRemove(date) });
+            if(currentSubTask === 'daily') {
+                if(!isDone) await ref.update({ doneDates: firebase.firestore.FieldValue.arrayUnion(date) });
+                else await ref.update({ doneDates: firebase.firestore.FieldValue.arrayRemove(date) });
+            } else await ref.update({ done: !isDone });
             loadData();
-            generateCalendar();
         }
 
-        async function deleteTask(id) {
-            if(confirm("Xóa nhé?")) { await db.collection("tasks").doc(id).delete(); loadData(); generateCalendar(); }
-        }
+        async function deleteTask(id) { if(confirm("Xóa nhé?")) { await db.collection("tasks").doc(id).delete(); loadData(); } }
 
         function updateProgress(done, total) {
             const p = total === 0 ? 0 : Math.round((done/total)*100);
@@ -248,64 +261,37 @@
             document.getElementById('streakCount').innerText = (p >= 80 ? "🔥 " : "🌑 ") + (p >= 80 ? "1+" : "0") + " Ngày";
         }
 
-        // --- CALENDAR LOGIC ---
         async function generateCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = "";
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            
-            document.getElementById('monthLabel').innerText = `Tháng ${month + 1}, ${year}`;
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const grid = document.getElementById('calendarGrid'); grid.innerHTML = "";
+            document.getElementById('monthLabel').innerText = `Tháng ${viewMonth + 1}, ${viewYear}`;
+            const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+            const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).where("type", "==", "daily").get();
+            const habits = []; snap.forEach(d => habits.push(d.data()));
 
-            // Fetch data once for the month
-            const snap = await db.collection("tasks").where("uid", "==", auth.currentUser.uid).get();
-            const tasks = []; snap.forEach(d => tasks.push(d.data()));
-
-            for (let i = 0; i < firstDay; i++) {
-                grid.appendChild(document.createElement('div'));
-            }
-
+            for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayDiv = document.createElement('div');
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const isSelected = document.getElementById('datePicker').value === dateStr;
-                
-                dayDiv.className = `calendar-day ${isSelected ? 'active' : ''}`;
+                const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                dayDiv.className = `calendar-day ${document.getElementById('datePicker').value === dateStr ? 'active' : ''}`;
                 dayDiv.innerHTML = `<span>${day}</span>`;
-                
-                // Check success icon
-                let done = 0;
-                tasks.forEach(t => { if(t.doneDates && t.doneDates.includes(dateStr)) done++; });
-                if(tasks.length > 0 && (done/tasks.length) >= 0.8) {
-                    dayDiv.innerHTML += `<span class="streak-icon">🔥</span>`;
-                }
-
-                dayDiv.onclick = () => {
-                    document.getElementById('datePicker').value = dateStr;
-                    dateChanged();
-                };
+                let done = 0; habits.forEach(h => { if(h.doneDates && h.doneDates.includes(dateStr)) done++; });
+                if(habits.length > 0 && (done/habits.length) >= 0.8) dayDiv.innerHTML += `<span class="streak-icon">🔥</span>`;
+                dayDiv.onclick = () => { document.getElementById('datePicker').value = dateStr; dateChanged(); generateCalendar(); };
                 grid.appendChild(dayDiv);
             }
         }
 
-        // --- DIARY LOGIC ---
         async function loadDiary() {
             const date = document.getElementById('datePicker').value;
-            document.getElementById('diaryDateLabel').innerText = date;
             const doc = await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).get();
             document.getElementById('diaryInput').value = doc.exists ? doc.data().content : "";
         }
 
         async function saveDiary() {
             const date = document.getElementById('datePicker').value;
-            const content = document.getElementById('diaryInput').value;
-            await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).set({
-                uid: auth.currentUser.uid, date, content
-            });
-            alert("Kỷ niệm đã được lưu lại! ✨");
+            await db.collection("diaries").doc(`${auth.currentUser.uid}_${date}`).set({ uid: auth.currentUser.uid, date, content: document.getElementById('diaryInput').value });
+            alert("Đã lưu lại kỷ niệm! ✨");
         }
     </script>
 </body>
