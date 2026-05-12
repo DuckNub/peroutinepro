@@ -143,7 +143,7 @@
             try {
                 if(type === 'signup') {
                     await auth.createUserWithEmailAndPassword(e, p);
-                    alert("Chào mừng Đức dê zét đã gia nhập hàng ngũ kỷ luật!");
+                    alert("Chào mừng bạn đã gia nhập hàng ngũ kỷ luật!");
                 } else {
                     await auth.signInWithEmailAndPassword(e, p);
                 }
@@ -154,7 +154,7 @@
             if (user) {
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('mainSection').classList.remove('hidden');
-                document.getElementById('userNameDisplay').innerText = "Chào " + (user.displayName || "Đức dê zét");
+                document.getElementById('userNameDisplay').innerText = "Chào " + (user.displayName || "tên của bạn");
                 if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
                 startTaskListener();
             } else {
